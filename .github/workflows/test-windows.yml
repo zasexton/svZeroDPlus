@@ -19,10 +19,13 @@ jobs:
           python-version: "3.11.4"
 
       - name: Install Conda & Python dependencies
-        shell: bash -l {0}
+        shell: pwsh
+        env:
+          CMAKE_GENERATOR: Ninja
+          CMAKE_BUILD_PARALLEL_LEVEL: 2
         run: |
           conda install -y -c conda-forge cmake ninja
-          pip install -e ".[dev]"
+          pip install --no-build-isolation -e ".[dev]"
           pip install networkx
 
       - name: Run unit tests
