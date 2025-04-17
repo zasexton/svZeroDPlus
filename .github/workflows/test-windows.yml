@@ -7,6 +7,7 @@ jobs:
     runs-on: windows-latest
     env:
       CONDA_ENV: zerod
+      PYTHONPATH: ${{ github.workspace }} 
 
     steps:
       - uses: actions/checkout@v4
