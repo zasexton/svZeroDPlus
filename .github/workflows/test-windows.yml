@@ -33,14 +33,19 @@ jobs:
         shell: pwsh
         run: |
           Write-Host "=== pip show pysvzerod ==="
-          pip show pysvzerod
+          pip show pysvzerod || Write-Host "  → pysvzerod is not installed"
 
-          Write-Host "`n=== Files in site‑packages ==="
-          $site = python - <<<'import sysconfig; print(sysconfig.get_paths()["purelib"])'
-          Get-ChildItem $site\pysvzerod* -Recurse | Select-Object FullName
+          Write-Host "`n=== site‑packages path ==="
+          $site = python -c "import sysconfig; print(sysconfig.get_paths()['purelib'])"
+          Write-Host "  $site"
+
+          Write-Host "`n=== Files in site‑packages matching pysvzerod* ==="
+          Get-ChildItem "$site\pysvzerod*" -Recurse -ErrorAction SilentlyContinue |
+          ForEach-Object { Write-Host "  $_.FullName" }
 
           Write-Host "`n=== Try a quick import ==="
-          python - <<<'import pysvzerod; print("OK", pysvzerod.__file__)'
+          python -c "import pysvzerod; print('OK →', pysvzerod.__file__)" ||
+          Write-Host "  → import pysvzerod failed"
 
       - name: Run unit tests
         shell: pwsh
