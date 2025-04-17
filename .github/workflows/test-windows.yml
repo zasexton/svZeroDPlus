@@ -21,7 +21,7 @@ jobs:
       - name: Install CMake-setuptools helper
         shell: pwsh
         run: |
-          pip install --upgrade cmake-setuptools
+          pip install --upgrade "cmake-setuptools>=0.1.4.post1"
 
       - name: Install Conda & Python dependencies
         shell: pwsh
