@@ -4,7 +4,7 @@ on:
 
 jobs:
   test-windows:
-    runs-on:
+    runs-on: windows-latest
     env:
       CONDA_ENV: zerod
 
