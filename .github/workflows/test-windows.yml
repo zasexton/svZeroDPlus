@@ -1,0 +1,71 @@
+name: test-windows.yml
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: "Test windows?"
+
+jobs:
+  test-windows:
+    runs-on:
+    env:
+      CONDA_ENV: zerod
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up miniconda
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          auto-update-conda: true
+          activate-environment: ${{env.CONDA_ENV}}
+          python-version: "3.11.4"
+
+      - name: Install Conda & Python dependencies
+        shell: bash
+        run: |
+          conda install -y -c conda-forge cmake ninja
+          pip install -e ".[dev]"
+          pip install networkx
+
+      - name: Run unit tests
+        shell: bash
+        run: |
+          cd tests
+          pytest -v --durations=0 --ignore=test_dirgraph.py
+
+      - name: Configure CMake (Release build, Ninja generator)
+        shell: bash
+        run: |
+          mkdir build
+          cd build
+          cmake -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DENABLE_DISTRIBUTION=ON \
+            ..
+
+      - name: Compile c++ code
+        shell: bash
+        run: |
+          cd build
+          cmake --build . --parallel 2
+          cd test_01
+          ./svZeroD_interface_test01.exe ../../../../build test_01/svzerod_3Dcoupling.json
+          cd ../test_02
+          ./svZeroD_interface_test02.exe ../../../../build test_02/svzerod_tuned.json
+          
+      # --- Package with CPack --------------------------------------------------
+      - name: Build installer (CPack)
+        shell: bash
+        run: |
+          cd build
+          cpack                       # creates installer inside build/distribution
+          cp distribution/svZeroDSolver_* ../
+
+      # --- Upload the installer artifact -------------------------------------
+      - name: Upload installer artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-installer
+          path: svZeroDSolver_*
+          if-no-files-found: error
