@@ -20,6 +20,7 @@ jobs:
 
       - name: Install Conda & Python dependencies
         shell: pwsh
+        working-directory: svZeroDPlus
         env:
           CMAKE_GENERATOR: "MinGW Makefiles"
           CMAKE_BUILD_PARALLEL_LEVEL: 2
@@ -31,11 +32,13 @@ jobs:
 
       - name: Run unit tests
         shell: pwsh
+        working-directory: svZeroDPlus
         run: conda run -n $Env:CONDA_ENV pytest -v --durations=0 --ignore=test_dirgraph.py
 
       # 5. Configure & build C++ with MinGW Makefiles
       - name: Configure & build C++
         shell: pwsh
+        working-directory: svZeroDPlus
         run: |
           mkdir build
           cd build
@@ -48,6 +51,7 @@ jobs:
       # 6. Build & run the interface tests
       - name: Build & run interface tests
         shell: pwsh
+        working-directory: svZeroDPlus
         run: |
           cd tests\test_interface
 
@@ -68,6 +72,7 @@ jobs:
       # 7. Package with CPack
       - name: Build installer (CPack)
         shell: pwsh
+        working-directory: svZeroDPlus
         run: |
           cd build
           cpack
