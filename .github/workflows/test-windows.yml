@@ -29,6 +29,19 @@ jobs:
           pip install --no-build-isolation .[dev]
           pip install networkx
 
+      - name: Debug installed pysvzerod
+        shell: pwsh
+        run: |
+          Write-Host "=== pip show pysvzerod ==="
+          pip show pysvzerod
+
+          Write-Host "`n=== Files in site‑packages ==="
+          $site = python - <<<'import sysconfig; print(sysconfig.get_paths()["purelib"])'
+          Get-ChildItem $site\pysvzerod* -Recurse | Select-Object FullName
+
+          Write-Host "`n=== Try a quick import ==="
+          python - <<<'import pysvzerod; print("OK", pysvzerod.__file__)'
+
       - name: Run unit tests
         shell: pwsh
         run: pytest -v --durations=0 --ignore=test_dirgraph.py
