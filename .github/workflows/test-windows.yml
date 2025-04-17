@@ -1,9 +1,6 @@
 name: test-windows.yml
 on:
   workflow_dispatch:
-    inputs:
-      name:
-        description: "Test windows?"
 
 jobs:
   test-windows:
