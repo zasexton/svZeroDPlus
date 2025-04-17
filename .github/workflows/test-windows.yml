@@ -26,7 +26,7 @@ jobs:
         run: |
           conda install -y -c conda-forge cmake m2-make
           pip install --upgrade cmake-setuptools
-          pip install --no-build-isolation -e ".[dev]"
+          pip install --no-build-isolation .[dev]
           pip install networkx
 
       - name: Run unit tests
