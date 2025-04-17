@@ -30,40 +30,50 @@ jobs:
           pip install networkx
 
       - name: Run unit tests
-        shell: bash
-        run: |
-          cd tests
-          pytest -v --durations=0 --ignore=test_dirgraph.py
+        shell: pwsh
+        run: conda run -n $Env:CONDA_ENV pytest -v --durations=0 --ignore=test_dirgraph.py
 
-      - name: Configure CMake (Release build, Ninja generator)
-        shell: bash
+      # 5. Configure & build C++ with MinGW Makefiles
+      - name: Configure & build C++
+        shell: pwsh
         run: |
           mkdir build
           cd build
-          cmake -G Ninja \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DENABLE_DISTRIBUTION=ON \
-            ..
-
-      - name: Compile c++ code
-        shell: bash
-        run: |
-          cd build
+          cmake -G "MinGW Makefiles" `
+                -DCMAKE_BUILD_TYPE=Release `
+                -DENABLE_DISTRIBUTION=ON `
+                ..
           cmake --build . --parallel 2
-          cd test_01
-          ./svZeroD_interface_test01.exe ../../../../build test_01/svzerod_3Dcoupling.json
-          cd ../test_02
-          ./svZeroD_interface_test02.exe ../../../../build test_02/svzerod_tuned.json
+
+      # 6. Build & run the interface tests
+      - name: Build & run interface tests
+        shell: pwsh
+        run: |
+          cd tests\test_interface
+
+          mkdir build_tests
+          cd build_tests
+          cmake -G "MinGW Makefiles" ..
+          cmake --build . --parallel 2
+
+          # Run the two executables:
+          .\test_01\svZeroD_interface_test01.exe `
+            ..\..\build `
+            .\test_01\svzerod_3Dcoupling.json
+
+          .\test_02\svZeroD_interface_test02.exe `
+            ..\..\build `
+            .\test_02\svzerod_tuned.json
           
-      # --- Package with CPack --------------------------------------------------
+      # 7. Package with CPack
       - name: Build installer (CPack)
-        shell: bash
+        shell: pwsh
         run: |
           cd build
-          cpack                       # creates installer inside build/distribution
-          cp distribution/svZeroDSolver_* ../
+          cpack
+          Copy-Item distribution\svZeroDSolver_* -Destination ..\
 
-      # --- Upload the installer artifact -------------------------------------
+      # 8. Upload the installer artifact
       - name: Upload installer artifact
         uses: actions/upload-artifact@v4
         with:
