@@ -18,6 +18,11 @@ jobs:
           activate-environment: ${{env.CONDA_ENV}}
           python-version: "3.11.4"
 
+      - name: Install CMake-setuptools helper
+        shell: pwsh
+        run: |
+          pip install --upgrade cmake-setuptools
+
       - name: Install Conda & Python dependencies
         shell: pwsh
         env:
