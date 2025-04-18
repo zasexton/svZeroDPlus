@@ -19,11 +19,15 @@ jobs:
           activate-environment: ${{env.CONDA_ENV}}
           python-version: "3.11.4"
 
-      - name: Install Conda & Python dependencies
-        shell: pwsh
+      - name: Allow MSVC generator
+        if: startsWith(matrix.os,'windows')
         run: |
           echo "CMAKE_GENERATOR=Visual Studio 17 2022" >> %GITHUB_ENV%
           echo "CMAKE_BUILD_TYPE=Release"               >> %GITHUB_ENV%
+
+      - name: Install Conda & Python dependencies
+        shell: pwsh
+        run: |
           conda install -y -c conda-forge cmake m2-make
           pip install --upgrade cmake-setuptools
           pip install --no-build-isolation -v .[dev]
