@@ -29,6 +29,7 @@ jobs:
           pip install --upgrade cmake-setuptools
           pip install --no-build-isolation .[dev]
           pip install networkx
+          pip show pysvzerod
 
       - name: Debug installed pysvzerod
         shell: pwsh
