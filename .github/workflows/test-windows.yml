@@ -19,15 +19,11 @@ jobs:
           activate-environment: ${{env.CONDA_ENV}}
           python-version: "3.11.4"
 
-      - name: MinGW toolchain
-        run: choco install mingw --no-progress
-
-      - name: Choose generator
-        run: echo "CMAKE_GENERATOR=MinGW Makefiles" >> $Env:GITHUB_ENV
-
       - name: Install Conda & Python dependencies
         shell: pwsh
         run: |
+          choco install mingw --no-progress
+          echo "CMAKE_GENERATOR=MinGW Makefiles" >> $Env:GITHUB_ENV
           conda install -y -c conda-forge cmake m2-make
           pip install --upgrade cmake-setuptools
           pip install --no-build-isolation -v .[dev]
