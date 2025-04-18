@@ -46,6 +46,10 @@ jobs:
           Get-ChildItem "$site\pysvzerod*" -Recurse -ErrorAction SilentlyContinue |
           ForEach-Object { Write-Host "  $_.FullName" }
 
+          Write-Host "`n=== Look for any *.pyd or *.so in project ==="
+          Get-ChildItem -Recurse D:\a\svZeroDPlus\svZeroDPlus\build | Where-Object { $_.Name -like "*.pyd" -or $_.Name -like "*.so" } |
+          ForEach-Object { Write-Host "  Built → $($_.FullName)" }
+
           Write-Host "`n=== Look for compiled extension ==="
           Get-ChildItem -Recurse $site | Where-Object { $_.Name -like "pysvzerod*.pyd" -or $_.Name -like "pysvzerod*.so" } |
           ForEach-Object { Write-Host "  Found → $($_.FullName)" }
