@@ -232,3 +232,16 @@ add_custom_target(codeformat
 # check code format
 add_custom_target(codecheck
   COMMAND find ${SDIR}/*.h ${SDIR}/*.cpp | xargs clang-format -style=file:${PROJECT_SOURCE_DIR}/.clang-format --dry-run --Werror)
+
+install(TARGETS pysvzerod
+  LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+  ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+  RUNTIME DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+)
+
+if (WIN32)
+  set_target_properties(pysvzerod PROPERTIES
+    PREFIX ""
+    SUFFIX ".pyd"
+  )
+endif()
