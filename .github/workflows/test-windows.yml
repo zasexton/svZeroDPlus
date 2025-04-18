@@ -21,10 +21,9 @@ jobs:
 
       - name: Install Conda & Python dependencies
         shell: pwsh
-        env:
-          CMAKE_GENERATOR: "MinGW Makefiles"
-          CMAKE_BUILD_PARALLEL_LEVEL: 2
         run: |
+          echo "CMAKE_GENERATOR=Visual Studio 17 2022" >> %GITHUB_ENV%
+          echo "CMAKE_BUILD_TYPE=Release"               >> %GITHUB_ENV%
           conda install -y -c conda-forge cmake m2-make
           pip install --upgrade cmake-setuptools
           pip install --no-build-isolation -v .[dev]
