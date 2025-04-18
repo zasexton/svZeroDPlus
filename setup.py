@@ -5,31 +5,32 @@ from cmake_setuptools import CMakeExtension, CMakeBuildExt
 
 class CustomCMakeBuild(CMakeBuildExt):
     def run(self):
-        super().run()
+        # -------------------------------------------------
+        # 1. Build the C++ extension *without* the default
+        #    setuptools copy step (set inplace False)
+        # -------------------------------------------------
+        inplace_orig = self.inplace        # remember
+        self.inplace = False               # inhibit copy_extensions_to_source
+        super().run()                      # runs CMake
+        self.inplace = inplace_orig        # restore flag
 
-        # This is where setuptools wants the compiled file to be
-        target_dir = os.path.abspath(os.path.dirname(self.get_ext_fullpath("pysvzerod")))
+        # -------------------------------------------------
+        # 2. Locate the compiled library
+        # -------------------------------------------------
         build_temp = os.path.abspath(self.build_temp)
+        search_root = os.path.join(build_temp, "python")     # we set this above
+        dest_dir = os.path.dirname(self.get_ext_fullpath("pysvzerod"))
 
-        print(f"[INFO] Searching for built extension in: {build_temp}")
-        print(f"[INFO] Will install extension into: {target_dir}")
-
-        found = False
-        for root, dirs, files in os.walk(build_temp):
+        for root, _, files in os.walk(search_root):
             for f in files:
                 if f.startswith("pysvzerod") and f.endswith((".so", ".pyd", ".dll", ".dylib")):
                     src = os.path.join(root, f)
-                    dst = os.path.join(target_dir, f)
-                    print(f"[INFO] Copying {src} → {dst}")
-                    os.makedirs(target_dir, exist_ok=True)
-                    shutil.copy2(src, dst)
-                    found = True
-                    break
-            if found:
-                break
+                    os.makedirs(dest_dir, exist_ok=True)
+                    shutil.copy2(src, os.path.join(dest_dir, f))
+                    print(f"[INFO] copied {src} → {dest_dir}")
+                    return
 
-        if not found:
-            raise RuntimeError("Failed to find built extension module for pysvzerod")
+        raise RuntimeError("pysvzerod binary not found in build tree")
 
 setup(
     ext_modules=[CMakeExtension("pysvzerod")],
