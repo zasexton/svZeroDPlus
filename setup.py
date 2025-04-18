@@ -34,5 +34,5 @@ class CustomCMakeBuild(CMakeBuildExt):
 
 setup(
     ext_modules=[CMakeExtension("pysvzerod")],
-    cmdclass={"build_ext": CustomCMakeBuild}
+    cmdclass={"build_ext": CMakeBuildExt}
 )
