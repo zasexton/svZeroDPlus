@@ -23,9 +23,17 @@ jobs:
         shell: pwsh
         run: |
           choco install mingw --no-progress
-          $Env:CMAKE_GENERATOR = 'MinGW Makefiles'
-          echo "CMAKE_GENERATOR=MinGW Makefiles" >> $Env:GITHUB_ENV
           conda install -y -c conda-forge cmake m2-make
+          # ---- make wrapper for cmake_setuptools -------------------------
+          $wrapper = "$env:USERPROFILE\make.bat"
+          @'
+          @echo off
+          rem cmake_setuptools calls:  make -j <jobs> <target>
+          rem Forward that to the generator‑agnostic form:
+          cmake --build . --target %3 --parallel %2
+          '@ | Out-File -Encoding ASCII $wrapper
+          echo "$env:USERPROFILE" >> $Env:GITHUB_PATH   # put wrapper in PATH
+          
           pip install --upgrade cmake-setuptools
           pip install --no-build-isolation -v .[dev]
           pip install networkx
