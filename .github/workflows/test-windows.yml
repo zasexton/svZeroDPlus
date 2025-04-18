@@ -27,7 +27,7 @@ jobs:
         run: |
           conda install -y -c conda-forge cmake m2-make
           pip install --upgrade cmake-setuptools
-          pip install --no-build-isolation .[dev]
+          pip install --no-build-isolation -v .[dev]
           pip install networkx
           pip show pysvzerod
           dir
