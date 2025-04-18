@@ -46,6 +46,10 @@ jobs:
           Get-ChildItem "$site\pysvzerod*" -Recurse -ErrorAction SilentlyContinue |
           ForEach-Object { Write-Host "  $_.FullName" }
 
+          Write-Host "`n=== Look for compiled extension ==="
+          Get-ChildItem -Recurse $site | Where-Object { $_.Name -like "pysvzerod*.pyd" -or $_.Name -like "pysvzerod*.so" } |
+          ForEach-Object { Write-Host "  Found → $($_.FullName)" }
+
           Write-Host "`n=== Try a quick import ==="
           python -c "import pysvzerod; print('OK →', pysvzerod.__file__)" ||
           Write-Host "  → import pysvzerod failed"
