@@ -19,11 +19,14 @@ jobs:
           activate-environment: ${{env.CONDA_ENV}}
           python-version: "3.11.4"
 
-      - name: Allow MSVC generator
-        if: startsWith(matrix.os,'windows')
-        run: |
-          echo "CMAKE_GENERATOR=Visual Studio 17 2022" >> %GITHUB_ENV%
-          echo "CMAKE_BUILD_TYPE=Release"               >> %GITHUB_ENV%
+      # Add Ninja on Windows
+      - name: Get Ninja
+        if: runner.os == 'Windows'
+        run: choco install ninja --no-progress
+
+      # Tell CMake to use it *for every* platform
+      - name: Choose generator
+        run: echo "CMAKE_GENERATOR=Ninja" >> $GITHUB_ENV
 
       - name: Install Conda & Python dependencies
         shell: pwsh
