@@ -30,6 +30,7 @@ jobs:
           pip install --no-build-isolation .[dev]
           pip install networkx
           pip show pysvzerod
+          dir
 
       - name: Debug installed pysvzerod
         shell: pwsh
