@@ -19,14 +19,11 @@ jobs:
           activate-environment: ${{env.CONDA_ENV}}
           python-version: "3.11.4"
 
-      # Add Ninja on Windows
-      - name: Get Ninja
-        if: runner.os == 'Windows'
-        run: choco install ninja --no-progress
+      - name: MinGW toolchain
+        run: choco install mingw --no-progress
 
-      # Tell CMake to use it *for every* platform
       - name: Choose generator
-        run: echo "CMAKE_GENERATOR=Ninja" >> $GITHUB_ENV
+        run: echo "CMAKE_GENERATOR=MinGW Makefiles" >> $Env:GITHUB_ENV
 
       - name: Install Conda & Python dependencies
         shell: pwsh
