@@ -159,7 +159,7 @@ add_executable(svzerodcalibrator applications/svzerodcalibrator.cpp
 # -----------------------------------------------------------------------------
 # Replace EXCLUDE_FROM_ALL with SHARED to test building the Python 
 # shared library.
-pybind11_add_module(pysvzerod EXCLUDE_FROM_ALL applications/pysvzerod.cpp)
+pybind11_add_module(pysvzerod applications/pysvzerod.cpp)
 
 # -----------------------------------------------------------------------------
 # Add source sub-directories.
