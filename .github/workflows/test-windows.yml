@@ -23,7 +23,7 @@ jobs:
         shell: pwsh
         run: |
           choco install mingw --no-progress
-          conda install -y -c conda-forge cmake
+          conda install -y -c conda-forge cmake graphviz python-graphviz pydot
           choco install vcredist2022 --no-progress
           # ---- make wrapper for cmake_setuptools -------------------------
           # $wrapper = Join-Path $Env:USERPROFILE 'make.bat'
@@ -42,7 +42,6 @@ jobs:
           pip install --upgrade cmake-setuptools
           pip install --no-build-isolation -v .[dev]
           pip install networkx
-          pip install pydot
           pip show pysvzerod
           dir
 
