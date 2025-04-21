@@ -89,6 +89,7 @@ jobs:
       - name: Configure & build C++
         shell: pwsh
         run: |
+          if (Test-Path build) { Remove-Item build -Recurse -Force }
           mkdir build
           cd build
           cmake -G "MinGW Makefiles" `
