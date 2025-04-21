@@ -78,7 +78,7 @@ jobs:
             Select-String "DLL Name"
             
           Write-Host "`n=== Try a quick import ==="
-          python -c "import pysvzerod; print('OK →', pysvzerod.__file__)" ||
+          python -c "import pysvzerod; print('OK ->', pysvzerod.__file__)" ||
           Write-Host "  → import pysvzerod failed"
 
       - name: Run unit tests
