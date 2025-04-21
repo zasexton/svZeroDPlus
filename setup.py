@@ -27,7 +27,7 @@ class CustomCMakeBuild(CMakeBuildExt):
                     src = os.path.join(root, f)
                     os.makedirs(dest_dir, exist_ok=True)
                     shutil.copy2(src, os.path.join(dest_dir, f))
-                    print(f"[INFO] copied {src} → {dest_dir}")
+                    print(f"[INFO] copied {src} -> {dest_dir}")
                     return
 
         raise RuntimeError("pysvzerod binary not found in build tree")
