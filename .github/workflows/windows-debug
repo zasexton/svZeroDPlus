@@ -1,0 +1,12 @@
+name: Debug on Windows
+on:
+  workflow_dispatch:
+
+jobs:
+  debug-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Start interactive tmate session
+        uses: mxschmitt/action-tmate@v3
