@@ -81,6 +81,13 @@ if (WIN32 AND MINGW)
     )
     # set(CMAKE_CXX_FLAGS
     #  "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc -lpthread")
+
+    # now query and print them back out:
+    get_target_property(_icc_opts pysvzerod INTERFACE_COMPILE_OPTIONS)
+    message(STATUS ">>> pysvzerod INTERFACE_COMPILE_OPTIONS = ${_icc_opts}")
+
+    get_target_property(_ilink_opts pysvzerod INTERFACE_LINK_OPTIONS)
+    message(STATUS ">>> pysvzerod INTERFACE_LINK_OPTIONS   = ${_ilink_opts}")
 endif()
 
 # -----------------------------------------------------------------------------
