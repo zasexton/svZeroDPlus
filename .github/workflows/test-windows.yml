@@ -25,14 +25,14 @@ jobs:
           choco install mingw --no-progress
           conda install -y -c conda-forge cmake m2-make
           # ---- make wrapper for cmake_setuptools -------------------------
-          $wrapper = "$env:USERPROFILE\make.bat"
+          $wrapper = Join-Path $Env:USERPROFILE 'make.bat'
           @'
           @echo off
-          rem cmake_setuptools calls:  make -j <jobs> <target>
-          rem Forward that to the generator‑agnostic form:
-          cmake --build . --target %3 --parallel %2
+          set TARGET=%2
+          echo [make.bat] building %TARGET% …
+          cmake --build . --config Release --target %TARGET%
           '@ | Out-File -Encoding ASCII $wrapper
-          echo "$env:USERPROFILE" >> $Env:GITHUB_PATH   # put wrapper in PATH
+          echo "$Env:USERPROFILE" >> $Env:GITHUB_PATH
           
           pip install --upgrade cmake-setuptools
           pip install --no-build-isolation -v .[dev]
