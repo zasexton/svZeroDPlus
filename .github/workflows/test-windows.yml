@@ -88,7 +88,6 @@ jobs:
       # 5. Configure & build C++ with MinGW Makefiles
       - name: Configure & build C++
         shell: pwsh
-        working-directory: svZeroDPlus
         run: |
           mkdir build
           cd build
