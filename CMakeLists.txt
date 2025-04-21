@@ -177,25 +177,36 @@ add_executable(svzerodcalibrator applications/svzerodcalibrator.cpp
 # shared library.
 pybind11_add_module(pysvzerod applications/pysvzerod.cpp)
 if(WIN32 AND "${CMAKE_GENERATOR}" STREQUAL "MinGW Makefiles")
-  message(STATUS ">> Applying MinGW static‑link flags to pysvzerod")
-  target_compile_options(pysvzerod PRIVATE
+  message(STATUS ">> Applying static‑link flags to pysvzerod")
+
+  include(CheckCXXCompilerFlag)
+  set(_static_flags
     -static
     -static-libgcc
     -static-libstdc++
-    -static-libwinpthread
   )
-  # you can use target_link_options if you’re on CMake ≥3.13:
-  target_link_libraries(pysvzerod PRIVATE
-    -static
-    -static-libgcc
-    -static-libstdc++
-    -static-libwinpthread
-  )
+  # test for winpthread support before adding
+  check_cxx_compiler_flag("-static-libwinpthread" HAVE_WINPTHREAD)
+  if(HAVE_WINPTHREAD)
+    list(APPEND _static_flags -static-libwinpthread)
+  else()
+    find_package(Threads REQUIRED)
+    target_link_libraries(pysvzerod PRIVATE Threads::Threads)
+    message(STATUS "   -static-libwinpthread not supported by this compiler, skipping")
+  endif()
+
+  # apply to compile *and* link
+  foreach(_f IN LISTS _static_flags)
+    target_compile_options(pysvzerod PRIVATE ${_f})
+    # CMake ≥3.13:
+    target_link_options   (pysvzerod PRIVATE ${_f})
+  endforeach()
+
   # now dump them so you can verify in the configure log:
-  get_target_property(_icc pysvzerod INTERFACE_COMPILE_OPTIONS)
-  message(STATUS ">>> pysvzerod INTERFACE_COMPILE_OPTIONS = ${_icc}")
-  get_target_property(_ilnk pysvzerod INTERFACE_LINK_LIBRARIES)
-  message(STATUS ">>> pysvzerod INTERFACE_LINK_LIBRARIES   = ${_ilnk}")
+  get_target_property(_ccopts pysvzerod COMPILE_OPTIONS)
+  message(STATUS ">>> pysvzerod COMPILE_OPTIONS = ${_ccopts}")
+  get_target_property(_lnkopts pysvzerod LINK_OPTIONS)
+  message(STATUS ">>> pysvzerod LINK_OPTIONS   = ${_lnkopts}")
 endif()
 # -----------------------------------------------------------------------------
 # Add source sub-directories.
