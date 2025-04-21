@@ -5,8 +5,19 @@ on:
 jobs:
   debug-windows:
     runs-on: windows-latest
+    env:
+      CONDA_ENV: zerod
+      PYTHONPATH: ${{ github.workspace }} 
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set up miniconda
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          auto-update-conda: true
+          activate-environment: ${{env.CONDA_ENV}}
+          python-version: "3.11.4"
+
       - name: Start interactive tmate session
         uses: mxschmitt/action-tmate@v3
+
