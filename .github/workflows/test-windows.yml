@@ -101,7 +101,6 @@ jobs:
       # 6. Build & run the interface tests
       - name: Build & run interface tests
         shell: pwsh
-        working-directory: svZeroDPlus
         run: |
           cd tests\test_interface
 
@@ -122,7 +121,6 @@ jobs:
       # 7. Package with CPack
       - name: Build installer (CPack)
         shell: pwsh
-        working-directory: svZeroDPlus
         run: |
           cd build
           cpack
