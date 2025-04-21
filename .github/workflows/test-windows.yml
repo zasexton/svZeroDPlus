@@ -22,19 +22,21 @@ jobs:
       - name: Install Conda & Python dependencies
         shell: pwsh
         run: |
-          # choco install mingw --no-progress
+          choco install mingw --no-progress
           conda install -y -c conda-forge cmake
           # ---- make wrapper for cmake_setuptools -------------------------
-          $wrapper = Join-Path $Env:USERPROFILE 'make.bat'
-          @'
-          @echo off
-          rem %1="-j", %2="pysvzerod"
-          set TARGET=%2
-          echo [make.bat] building %TARGET% ...
-          cmake --build . --config Release --target %TARGET%
-          '@ | Out-File -Encoding ASCII $wrapper
-
-          echo "$Env:USERPROFILE" >> $Env:GITHUB_PATH   # prepend your wrapper dir to PATH
+          # $wrapper = Join-Path $Env:USERPROFILE 'make.bat'
+          # @'
+          # @echo off
+          # rem %1="-j", %2="pysvzerod"
+          # set TARGET=%2
+          # echo [make.bat] building %TARGET% ...
+          # cmake --build . --config Release --target %TARGET%
+          # '@ | Out-File -Encoding ASCII $wrapper
+          $Env:CMAKE_GENERATOR = 'MinGW Makefiles'
+          Write-Host "→ Using CMAKE_GENERATOR = $Env:CMAKE_GENERATOR"
+          
+          # echo "$Env:USERPROFILE" >> $Env:GITHUB_PATH   # prepend your wrapper dir to PATH
           
           pip install --upgrade cmake-setuptools
           pip install --no-build-isolation -v .[dev]
