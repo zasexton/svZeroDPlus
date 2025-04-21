@@ -58,6 +58,23 @@ if(ENABLE_COVERAGE)
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
 endif()
 
+if (WIN32)
+  if (MSVC)
+    if (CMAKE_VERSION VERSION_GREATER_EQUAL "3.15")
+      if (NOT DEFINED CMAKE_MSVC_RUNTIME_LIBRARY)
+        set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+      endif()
+    endif()
+    else()
+      foreach(_var
+              CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE
+              CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
+              CMAKE_SHARED_LINKER_FLAGS)
+      endforeach()
+    endif()
+  endif()
+endif()
+  
 # -----------------------------------------------------------------------------
 # Set the location to store the binaries and libraries created by this project.
 # -----------------------------------------------------------------------------
