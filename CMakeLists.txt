@@ -75,8 +75,12 @@ if (WIN32 AND MSVC)
 endif()
 
 if (WIN32 AND MINGW)
-    set(CMAKE_CXX_FLAGS
-      "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc -lpthread")
+    set_target_properties(pysvzerod PROPERTIES
+      INTERFACE_COMPILE_OPTIONS "-static-libgcc;-static-libstdc++"
+      INTERFACE_LINK_OPTIONS    "-static-libgcc;-static-libstdc++"
+    )
+    # set(CMAKE_CXX_FLAGS
+    #  "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc -lpthread")
 endif()
 
 # -----------------------------------------------------------------------------
