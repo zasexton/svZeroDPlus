@@ -74,22 +74,6 @@ if (WIN32 AND MSVC)
   endif()
 endif()
 
-if (WIN32 AND MINGW)
-    set_target_properties(pysvzerod PROPERTIES
-      INTERFACE_COMPILE_OPTIONS "-static-libgcc;-static-libstdc++;-lpthread"
-      INTERFACE_LINK_OPTIONS    "-static-libgcc;-static-libstdc++;-lpthread"
-    )
-    # set(CMAKE_CXX_FLAGS
-    #  "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc -lpthread")
-
-    # now query and print them back out:
-    get_target_property(_icc_opts pysvzerod INTERFACE_COMPILE_OPTIONS)
-    message(STATUS ">>> pysvzerod INTERFACE_COMPILE_OPTIONS = ${_icc_opts}")
-
-    get_target_property(_ilink_opts pysvzerod INTERFACE_LINK_OPTIONS)
-    message(STATUS ">>> pysvzerod INTERFACE_LINK_OPTIONS   = ${_ilink_opts}")
-endif()
-
 # -----------------------------------------------------------------------------
 # Set the location to store the binaries and libraries created by this project.
 # -----------------------------------------------------------------------------
@@ -192,7 +176,27 @@ add_executable(svzerodcalibrator applications/svzerodcalibrator.cpp
 # Replace EXCLUDE_FROM_ALL with SHARED to test building the Python 
 # shared library.
 pybind11_add_module(pysvzerod applications/pysvzerod.cpp)
-
+if(WIN32 AND "${CMAKE_GENERATOR}" STREQUAL "MinGW Makefiles")
+  message(STATUS ">> Applying MinGW static‑link flags to pysvzerod")
+  target_compile_options(pysvzerod PRIVATE
+    -static
+    -static-libgcc
+    -static-libstdc++
+    -static-libwinpthread
+  )
+  # you can use target_link_options if you’re on CMake ≥3.13:
+  target_link_libraries(pysvzerod PRIVATE
+    -static
+    -static-libgcc
+    -static-libstdc++
+    -static-libwinpthread
+  )
+  # now dump them so you can verify in the configure log:
+  get_target_property(_icc pysvzerod INTERFACE_COMPILE_OPTIONS)
+  message(STATUS ">>> pysvzerod INTERFACE_COMPILE_OPTIONS = ${_icc}")
+  get_target_property(_ilnk pysvzerod INTERFACE_LINK_LIBRARIES)
+  message(STATUS ">>> pysvzerod INTERFACE_LINK_LIBRARIES   = ${_ilnk}")
+endif()
 # -----------------------------------------------------------------------------
 # Add source sub-directories.
 # -----------------------------------------------------------------------------
