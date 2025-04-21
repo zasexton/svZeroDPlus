@@ -83,7 +83,7 @@ jobs:
 
       - name: Run unit tests
         shell: pwsh
-        run: pytest -v --durations=0 --ignore=test_dirgraph.py
+        run: pytest -v --durations=0 --ignore=tests/test_dirgraph.py
 
       # 5. Configure & build C++ with MinGW Makefiles
       - name: Configure & build C++
