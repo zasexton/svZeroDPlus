@@ -24,6 +24,7 @@ jobs:
         run: |
           choco install mingw --no-progress
           conda install -y -c conda-forge cmake
+          choco install vcredist2022 --no-progress
           # ---- make wrapper for cmake_setuptools -------------------------
           # $wrapper = Join-Path $Env:USERPROFILE 'make.bat'
           # @'
