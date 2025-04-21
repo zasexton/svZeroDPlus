@@ -67,6 +67,16 @@ jobs:
           Get-ChildItem -Recurse $site | Where-Object { $_.Name -like "pysvzerod*.pyd" -or $_.Name -like "pysvzerod*.so" } |
           ForEach-Object { Write-Host "  Found → $($_.FullName)" }
 
+          Write-Host "`n=== Look for DLL Dependencies ==="
+          $pyd = Join-Path `
+            (python -c "import sysconfig; print(sysconfig.get_paths()['purelib'])") `
+            pysvzerod.pyd
+          Write-Host "→ analyzing dependencies for $pyd"
+          # use objdump from your MinGW install
+          $obj = "${Env:ProgramData}\mingw64\mingw64\bin\objdump.exe"
+          & $obj -x $pyd |
+            Select-String "DLL Name"
+            
           Write-Host "`n=== Try a quick import ==="
           python -c "import pysvzerod; print('OK →', pysvzerod.__file__)" ||
           Write-Host "  → import pysvzerod failed"
