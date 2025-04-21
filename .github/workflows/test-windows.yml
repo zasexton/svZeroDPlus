@@ -42,6 +42,7 @@ jobs:
           pip install --upgrade cmake-setuptools
           pip install --no-build-isolation -v .[dev]
           pip install networkx
+          pip install pydot
           pip show pysvzerod
           dir
 
