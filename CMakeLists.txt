@@ -73,7 +73,12 @@ if (WIN32 AND MSVC)
     endforeach()
   endif()
 endif()
-  
+
+if (WIN32 AND MINGW)
+    set(CMAKE_CXX_FLAGS
+      "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc -lpthread")
+endif()
+
 # -----------------------------------------------------------------------------
 # Set the location to store the binaries and libraries created by this project.
 # -----------------------------------------------------------------------------
@@ -85,8 +90,6 @@ endif()
 # Need to add the -fPIC flag to build the interface shared library.
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
-  set(CMAKE_CXX_FLAGS_RELEASE
-      "${CMAKE_CXX_FLAGS_RELEASE} -static-libstdc++ -static-libgcc")
 endif()
 
 # -----------------------------------------------------------------------------
