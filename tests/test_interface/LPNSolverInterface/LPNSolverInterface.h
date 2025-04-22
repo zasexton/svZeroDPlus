@@ -1,20 +1,5 @@
 
-#ifdef _WIN32
-  #include <windows.h>
-  using dl_handle_t = HMODULE;
-  inline dl_handle_t dlopen(const char *lib, int /*flags*/) {
-    return LoadLibraryA(lib);
-  }
-  inline void *dlsym(dl_handle_t h, const char *sym) {
-    FARPROC p = GetProcAddress(h, sym);
-    return reinterpret_cast<void*>(p);
-  }
-  inline int dlclose(dl_handle_t h) {
-    return FreeLibrary(h) ? 0 : -1;
-  }
-  inline const char *dlerror() { return ""; }
-#else
-  #include <dlfcn.h>
+#include <dlfcn.h>
 #endif
 #include <stdio.h>
 #include <stdlib.h>
