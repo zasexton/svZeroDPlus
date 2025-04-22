@@ -81,8 +81,14 @@ if (WIN32)
     GIT_TAG        v1.4.2
   )
   FetchContent_MakeAvailable(dlfcn-win32)
-  if (NOT TARGET dlfcn)
-    add_library(dlfcn ALIAS dlfcn-win32)
+  if (TARGET dlfcn-win32::dlfcn)
+    if (NOT TARGET dlfcn)
+      add_library(dlfcn ALIAS dlfcn-win32::dlfcn)
+    endif()
+  else()
+    message(FATAL_ERROR
+      "dlfcn-win32 has no target named 'dlfcn-win32::dlfcn'. "
+      "Please check the version you fetched.")
   endif()
 endif()
 
