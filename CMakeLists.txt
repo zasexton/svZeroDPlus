@@ -74,6 +74,15 @@ if (WIN32 AND MSVC)
   endif()
 endif()
 
+if (WIN32)
+  FetchContent_Declare(
+    dlfcn_win32
+    GIT_REPOSITORY https://github.com/dlfcn-win32/dlfcn-win32.git
+    GIT_TAG        v1.4.2
+  )
+  FetchContent_MakeAvailable(dlfcn_win32)
+endif()
+
 # -----------------------------------------------------------------------------
 # Set the location to store the binaries and libraries created by this project.
 # -----------------------------------------------------------------------------
@@ -193,8 +202,13 @@ if(WIN32 AND "${CMAKE_GENERATOR}" STREQUAL "MinGW Makefiles")
     find_package(Threads REQUIRED)
     target_link_libraries(pysvzerod PRIVATE Threads::Threads)
     message(STATUS "   -static-libwinpthread not supported by this compiler, skipping")
-  endif()
-
+endif()
+if (WIN32)
+  target_link_libraries(pysvzerod PRIVATE dlfcn)
+  target_include_directories(pysvzerod PRIVATE
+    ${dlfcn_win32_SOURCE_DIR}/include
+  )
+endif()
   # apply to compile *and* link
   foreach(_f IN LISTS _static_flags)
     target_compile_options(pysvzerod PRIVATE ${_f})
