@@ -76,19 +76,14 @@ endif()
 
 if (WIN32)
   FetchContent_Declare(
-    dlfcn-win32
+    dlfcn_win32
     GIT_REPOSITORY https://github.com/dlfcn-win32/dlfcn-win32.git
     GIT_TAG        v1.4.2
+    GIT_SHALLOW    TRUE
   )
-  FetchContent_MakeAvailable(dlfcn-win32)
-  if (TARGET dlfcn-win32::dlfcn)
-    if (NOT TARGET dlfcn)
-      add_library(dlfcn ALIAS dlfcn-win32::dlfcn)
-    endif()
-  else()
-    message(FATAL_ERROR
-      "dlfcn-win32 has no target named 'dlfcn-win32::dlfcn'. "
-      "Please check the version you fetched.")
+  FetchContent_MakeAvailable(dlfcn_win32)
+  if (NOT TARGET dlfcn‑win32)
+    add_library(dlfcn‑win32 ALIAS dlfcn)
   endif()
 endif()
 
