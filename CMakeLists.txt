@@ -82,6 +82,13 @@ if (WIN32)
     GIT_SHALLOW    TRUE
   )
   FetchContent_MakeAvailable(dlfcn_win32)
+  get_property(_allTargets GLOBAL PROPERTY TARGETS)
+
+  message(STATUS "---------- ALL TARGETS KNOWN TO CMAKE ----------")
+  foreach(tgt IN LISTS _allTargets)
+      message(STATUS "  •  ${tgt}")
+  endforeach()
+  message(STATUS "-------------------------------------------------")
   if (TARGET dlfcn-win32)
     add_library(dlfcn ALIAS dlfcn-win32)
   else()
