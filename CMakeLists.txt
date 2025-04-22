@@ -81,6 +81,7 @@ if (WIN32)
     GIT_TAG        v1.4.2
   )
   FetchContent_MakeAvailable(dlfcn_win32)
+  list(APPEND EXTRA_LINK_LIBS dlfcn)
 endif()
 
 # -----------------------------------------------------------------------------
@@ -202,13 +203,7 @@ if(WIN32 AND "${CMAKE_GENERATOR}" STREQUAL "MinGW Makefiles")
     find_package(Threads REQUIRED)
     target_link_libraries(pysvzerod PRIVATE Threads::Threads)
     message(STATUS "   -static-libwinpthread not supported by this compiler, skipping")
-endif()
-if (WIN32)
-  target_link_libraries(pysvzerod PRIVATE dlfcn)
-  target_include_directories(pysvzerod PRIVATE
-    ${dlfcn_win32_SOURCE_DIR}/include
-  )
-endif()
+  endif()
   # apply to compile *and* link
   foreach(_f IN LISTS _static_flags)
     target_compile_options(pysvzerod PRIVATE ${_f})
@@ -273,7 +268,7 @@ target_link_libraries(pysvzerod PRIVATE svzero_algebra_library)
 target_link_libraries(pysvzerod PRIVATE svzero_model_library)
 target_link_libraries(pysvzerod PRIVATE svzero_optimize_library)
 target_link_libraries(pysvzerod PRIVATE svzero_solve_library)
-
+target_link_libraries(pysvzerod PRIVATE ${EXTRA_LINK_LIBS})
 
 # Create distribution
 set(ENABLE_DISTRIBUTION OFF CACHE BOOL "Enable installer build")
