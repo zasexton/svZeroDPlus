@@ -82,8 +82,8 @@ if (WIN32)
     GIT_SHALLOW    TRUE
   )
   FetchContent_MakeAvailable(dlfcn_win32)
-  if (NOT TARGET dlfcn‑win32)
-    add_library(dlfcn‑win32 ALIAS dlfcn)
+  if (NOT TARGET dlfcn-win32)
+    add_library(dlfcn-win32 ALIAS dlfcn)
   endif()
 endif()
 
