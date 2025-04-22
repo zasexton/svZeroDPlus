@@ -1,5 +1,14 @@
 
-#include <dlfcn.h>
+#ifdef _WIN32
+  #include <windows.h>
+  using dl_handle_t = HMODULE;
+  #define dlopen(lib, flags)         LoadLibraryA(lib)
+  #define dlsym(handle, symbol)      GetProcAddress(handle, symbol)
+  #define dlclose(handle)            FreeLibrary(handle)
+  inline const char *dlerror() { return ""; }
+#else
+  #include <dlfcn.h>
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
