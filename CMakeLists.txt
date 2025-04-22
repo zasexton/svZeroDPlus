@@ -81,7 +81,9 @@ if (WIN32)
     GIT_TAG        v1.4.2
   )
   FetchContent_MakeAvailable(dlfcn-win32)
-  add_library(dlfcn ALIAS dlfcn-win32)
+  if (NOT TARGET dlfcn)
+    add_library(dlfcn ALIAS dlfcn-win32)
+  endif()
 endif()
 
 # -----------------------------------------------------------------------------
