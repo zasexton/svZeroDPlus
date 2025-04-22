@@ -2,9 +2,16 @@
 #ifdef _WIN32
   #include <windows.h>
   using dl_handle_t = HMODULE;
-  #define dlopen(lib, flags)         LoadLibraryA(lib)
-  #define dlsym(handle, symbol)      GetProcAddress(handle, symbol)
-  #define dlclose(handle)            FreeLibrary(handle)
+  inline dl_handle_t dlopen(const char *lib, int /*flags*/) {
+    return LoadLibraryA(lib);
+  }
+  inline void *dlsym(dl_handle_t h, const char *sym) {
+    FARPROC p = GetProcAddress(h, sym);
+    return reinterpret_cast<void*>(p);
+  }
+  inline int dlclose(dl_handle_t h) {
+    return FreeLibrary(h) ? 0 : -1;
+  }
   inline const char *dlerror() { return ""; }
 #else
   #include <dlfcn.h>
@@ -70,8 +77,11 @@ class LPNSolverInterface
     
     std::string lpn_set_external_step_size_name_;
     void (*lpn_set_external_step_size_)(const int, double);
-
+#ifdef _WIN32
+    dl_handle_t library_handle_ = nullptr;
+#else
     void* library_handle_ = nullptr;
+#endif
     int problem_id_ = 0;
     int system_size_ = 0;
     int num_cycles_ = 0;
