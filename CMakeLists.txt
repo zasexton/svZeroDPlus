@@ -76,12 +76,11 @@ endif()
 
 if (WIN32)
   FetchContent_Declare(
-    dlfcn_win32
+    dlfcn
     GIT_REPOSITORY https://github.com/dlfcn-win32/dlfcn-win32.git
     GIT_TAG        v1.4.2
   )
-  FetchContent_MakeAvailable(dlfcn_win32)
-  list(APPEND EXTRA_LINK_LIBS dlfcn)
+  FetchContent_MakeAvailable(dlfcn)
 endif()
 
 # -----------------------------------------------------------------------------
@@ -268,7 +267,9 @@ target_link_libraries(pysvzerod PRIVATE svzero_algebra_library)
 target_link_libraries(pysvzerod PRIVATE svzero_model_library)
 target_link_libraries(pysvzerod PRIVATE svzero_optimize_library)
 target_link_libraries(pysvzerod PRIVATE svzero_solve_library)
-target_link_libraries(pysvzerod PRIVATE ${EXTRA_LINK_LIBS})
+if (WIN32)
+  target_link_libraries(pysvzerod PRIVATE dlfcn)
+endif()
 
 # Create distribution
 set(ENABLE_DISTRIBUTION OFF CACHE BOOL "Enable installer build")
