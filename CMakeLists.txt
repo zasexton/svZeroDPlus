@@ -76,11 +76,12 @@ endif()
 
 if (WIN32)
   FetchContent_Declare(
-    dlfcn
+    dlfcn-win32
     GIT_REPOSITORY https://github.com/dlfcn-win32/dlfcn-win32.git
     GIT_TAG        v1.4.2
   )
-  FetchContent_MakeAvailable(dlfcn)
+  FetchContent_MakeAvailable(dlfcn-win32)
+  add_library(dlfcn ALIAS dlfcn-win32)
 endif()
 
 # -----------------------------------------------------------------------------
