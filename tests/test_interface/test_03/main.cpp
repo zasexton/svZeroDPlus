@@ -45,11 +45,11 @@ int main(int argc, char** argv)
   //}  else {
   //  throw std::runtime_error("Could not find shared libraries " + interface_lib_so + " or " + interface_lib_dylib);
   //}
-  if (lib_so.exists()) {
+  if (fs::exists(lib_so)) {
     interface.load_library(lib_so.string());
-  } else if (lib_dylib.exists()) {
+  } else if (fs::exists(lib_dylib)) {
     interface.load_library(lib_dylib.string());
-  } else if (lib_dll.exists()) {
+  } else if (fs::exists(lib_dll)) {
     interface.load_library(lib_dll.string());
   } else {
     throw std::runtime_error("Could not find shared libraries " + lib_so.string() + " or " + lib_dylib.string() + " or " + lib_dll.string() + " !");
