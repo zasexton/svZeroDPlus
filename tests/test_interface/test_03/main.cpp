@@ -26,16 +26,19 @@ int main(int argc, char** argv)
   std::string interface_lib_path = svzerod_build_path + "/src/interface/libsvzero_interface";
   std::string interface_lib_so = interface_lib_path + ".so";
   std::string interface_lib_dylib = interface_lib_path + ".dylib";
+  std::string interface_lib_dll = interface_lib_path + ".dll";
   std::ifstream lib_so_exists(interface_lib_so);
   std::ifstream lib_dylib_exists(interface_lib_dylib);
+  std::ifstream lib_dll_exists(interface_lib_dll);
   if (lib_so_exists) {
     interface.load_library(interface_lib_so);
   } else if (lib_dylib_exists) {
     interface.load_library(interface_lib_dylib);
-  } else {
+  } else if (lib_dll_exists) {
+    interface.load_library(interface_lib_dll);
+  }  else {
     throw std::runtime_error("Could not find shared libraries " + interface_lib_so + " or " + interface_lib_dylib);
   } 
-
   // Set up the svZeroD model
   std::string file_name = std::string(argv[2]);
   interface.initialize(file_name);
