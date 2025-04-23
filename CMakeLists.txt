@@ -74,28 +74,6 @@ if (WIN32 AND MSVC)
   endif()
 endif()
 
-if (WIN32)
-  FetchContent_Declare(
-    dlfcn_win32
-    GIT_REPOSITORY https://github.com/dlfcn-win32/dlfcn-win32.git
-    GIT_TAG        v1.4.2
-    GIT_SHALLOW    TRUE
-  )
-  FetchContent_MakeAvailable(dlfcn_win32)
-  get_property(_allTargets GLOBAL PROPERTY TARGETS)
-
-  message(STATUS "---------- ALL TARGETS KNOWN TO CMAKE ----------")
-  foreach(tgt IN LISTS _allTargets)
-      message(STATUS "  •  ${tgt}")
-  endforeach()
-  message(STATUS "-------------------------------------------------")
-  if (TARGET dlfcn-win32::dl)
-    add_library(dlfcn ALIAS dlfcn-win32::dl)
-  else()
-    FetchContent_Populate(dlfcn_win32)
-    add_library(dlfcn ALIAS dlfcn-win32)
-  endif()
-endif()
 
 # -----------------------------------------------------------------------------
 # Set the location to store the binaries and libraries created by this project.
@@ -281,9 +259,6 @@ target_link_libraries(pysvzerod PRIVATE svzero_algebra_library)
 target_link_libraries(pysvzerod PRIVATE svzero_model_library)
 target_link_libraries(pysvzerod PRIVATE svzero_optimize_library)
 target_link_libraries(pysvzerod PRIVATE svzero_solve_library)
-if (WIN32)
-  target_link_libraries(pysvzerod PRIVATE dlfcn)
-endif()
 
 # Create distribution
 set(ENABLE_DISTRIBUTION OFF CACHE BOOL "Enable installer build")
