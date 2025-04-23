@@ -110,13 +110,13 @@ jobs:
           cmake --build . --parallel 2
 
           # Run the two executables:
-          .\test_01\svZeroD_interface_test01.exe `
-            ..\..\build `
-            .\test_01\svzerod_3Dcoupling.json
+          ./test_01/svZeroD_interface_test01.exe `
+            ../../../build `
+            ../test_01/svzerod_3Dcoupling.json
 
-          .\test_02\svZeroD_interface_test02.exe `
-            ..\..\build `
-            .\test_02\svzerod_tuned.json
+          ./test_02/svZeroD_interface_test02.exe `
+            ../../../build `
+            ../test_02/svzerod_tuned.json
           
       # 7. Package with CPack
       - name: Build installer (CPack)
