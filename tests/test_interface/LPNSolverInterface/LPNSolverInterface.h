@@ -2,6 +2,9 @@
 #if defined(_WIN32) || defined(_WIN64)
 /* ----------  Windows implementation  ---------- */
 #include <windows.h>
+#ifdef interface
+  undef interface
+#endif
 #include <string>
 
 // type used in your class for the handle
