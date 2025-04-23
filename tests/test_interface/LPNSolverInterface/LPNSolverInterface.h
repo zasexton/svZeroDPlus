@@ -3,7 +3,7 @@
 /* ----------  Windows implementation  ---------- */
 #include <windows.h>
 #ifdef interface
-  undef interface
+  #undef interface
 #endif
 #include <string>
 
