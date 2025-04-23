@@ -120,7 +120,7 @@ class LPNSolverInterface
     std::string lpn_set_external_step_size_name_;
     void (*lpn_set_external_step_size_)(const int, double);
 
-    void* library_handle_ = nullptr;
+    dl_handle_t library_handle_ = nullptr;
 
     int problem_id_ = 0;
     int system_size_ = 0;
